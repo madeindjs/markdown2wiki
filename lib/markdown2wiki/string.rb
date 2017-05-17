@@ -5,108 +5,95 @@ class String
 
 	# Wikiに変換する
 	def markdown_to_wiki
-		# 斜体
-		self.convert_italic!
-		# 太字
-		self.convert_strong!
-		# 打ち消し線
-		self.convert_strikethrough!
-		# 見出し
-		self.convert_heading!
-		# 順序なしリスト
-		self.convert_unordered_list! INDENT_CHAR
-		# 順序つきリスト
-		self.convert_ordered_list! INDENT_CHAR
-		# リンク
-		self.convert_link!
+		wiki = self
 
-		return self
-	end
+		# convert italic!
+		wiki.gsub!(/\*((?!\s)[^\*]+?)\*(?=[^\*|$]{1})/, '_\1_')
+		# convert strong!
+		wiki.gsub!(/\*\*((?!\s)[^\*]+?)\*\*(?=[^\*|$]{1})/, '*\1*')
+		# convert block code
+		wiki.gsub!(/(~|`){3}([a-z]+)/, '<pre><code class="\2">')
+		wiki.gsub!(/(~|`){3}/, '</code></pre>')
+		# wiki.gsub!(/|(~~~\|```)/, '</pre></code>')
+		# convert inline code
+		wiki.gsub!(/\`((?!\s)[^\`]+?)\`/, '@\1@')
 
-	private
+		# convert strikethrough!
+		wiki.gsub!(/~(.+?)~/, '-\1-')
 
-	def convert_strong!
-		self.gsub(/\*\*((?!\s)[^\*]+?)\*\*(?=[^\*|$]{1})/, '*\1*')
-		self.gsub(/__((?!\s)[^_]+?)__(?=[^_|$]{1})/, '*\1*')
-		return self
-	end
-
-	def convert_italic!
-		self.gsub!(/\*((?!\s)[^\*]+?)\*(?=[^\*|$]{1})/, '_\1_')
-		return self
-	end
-
-	def convert_strikethrough!
-		self.gsub!(/~(.+?)~/, '-\1-')
-		return self
-	end
-
-	def convert_heading!
-		/(#+)/ =~ self
-
-		if $1.nil?
-			return self
+		# convert heading!
+		/(#+)/ =~ wiki
+		unless $1.nil?
+			tag = "h#{$1.length}."
+			wiki.gsub!(/(#+)/, tag)
 		end
 
-		tag = "h#{$1.length}."
-		self.gsub!(/(#+)/, tag)
-		return self
+
+		return wiki
 	end
 
-	def convert_unordered_list!(space = nil)
-		space ||= '\t'
+	# private
 
-		pattern = /^(#{space}*\*)/
-		pattern =~ self
+	# 	wiki = self
 
-		if $1.nil?
-			return self
-		end
 
-		symbol = '*'
-		$1.scan(/\t/).size.to_i.times do
-			symbol += '*'
-		end
+	# 	return self
+	# end
 
-		self.gsub!(pattern, symbol)
-		return self
-	end
+	# 	# convert unordered_list!(space = nil)
+	# 	space ||= '\t'
 
-	def convert_ordered_list!(space = nil)
-		space ||= '\t'
+	# 	pattern = /^(#{space}*\*)/
+	# 	pattern =~ self
 
-		pattern = /^(#{space}*[0-9]+?\.)/
-		pattern =~ self
+	# 	if $1.nil?
+	# 		return self
+	# 	end
 
-		if $1.nil?
-			return self
-		end
+	# 	symbol = '*'
+	# 	$1.scan(/\t/).size.to_i.times do
+	# 		symbol += '*'
+	# 	end
 
-		symbol = '#'
-		$1.scan(/\t/).size.to_i.times do
-			symbol += '#'
-		end
+	# 	self.gsub!(pattern, symbol)
+	# 	return self
+	# end
 
-		self.gsub!(pattern, symbol)
-		return self
-	end
+	# 	# convert ordered_list!(space = nil)
+	# 	space ||= '\t'
 
-	def convert_link!
-		/\[(.+?)\]\((.+?)( "(.+)")?\)/ =~ self
+	# 	pattern = /^(#{space}*[0-9]+?\.)/
+	# 	pattern =~ self
 
-		if $1.nil?
-			return self
-		end
+	# 	if $1.nil?
+	# 		return self
+	# 	end
+
+	# 	symbol = '#'
+	# 	$1.scan(/\t/).size.to_i.times do
+	# 		symbol += '#'
+	# 	end
+
+	# 	self.gsub!(pattern, symbol)
+	# 	return self
+	# end
+
+	# 	# convert link!
+	# 	/\[(.+?)\]\((.+?)( "(.+)")?\)/ =~ self
+
+	# 	if $1.nil?
+	# 		return self
+	# 	end
 	
-		title = ''
+	# 	title = ''
 
-		if !$4.nil?
-			title = '(' + $4 + ')'
-		end
+	# 	if !$4.nil?
+	# 		title = '(' + $4 + ')'
+	# 	end
 	
-		link = '"' + $1 + title + '":' + $2
+	# 	link = '"' + $1 + title + '":' + $2
 	
-		self.gsub!(/\[(.+?)\]\((.+?)( "(.+)")?\)/, link)
-		return self
-	end
+	# 	self.gsub!(/\[(.+?)\]\((.+?)( "(.+)")?\)/, link)
+	# 	return self
+	# end
 end
