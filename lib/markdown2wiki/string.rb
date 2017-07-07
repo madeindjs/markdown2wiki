@@ -9,6 +9,8 @@ class String
 
 		# convert italic!
 		wiki.gsub!(/\*((?!\s)[^\*]+?)\*(?=[^\*|$]{1})/, '_\1_')
+		# convert link!
+		wiki.gsub!(/\[(.*)\]\((.*)\)/, '"\1":\2')
 		# convert strong!
 		wiki.gsub!(/\*\*((?!\s)[^\*]+?)\*\*(?=[^\*|$]{1})/, '*\1*')
 		# convert block code
