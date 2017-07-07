@@ -24,7 +24,7 @@ class String
 		wiki.gsub!(/~(.+?)~/, '-\1-')
 
 		# convert heading!
-		/(#+)\n/ =~ wiki
+		/(#+).*\n\n/ =~ wiki
 		unless $1.nil?
 			tag = "h#{$1.length}."
 			wiki.gsub!(/(#+)/, tag)
