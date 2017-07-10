@@ -9,13 +9,21 @@ class String
 
 		# convert italic!
 		wiki.gsub!(/\*((?!\s)[^\*]+?)\*(?=[^\*|$]{1})/, '_\1_')
+
 		# convert link!
 		wiki.gsub!(/\[(.*)\]\((.*)\)/, '"\1":\2')
+
 		# convert strong!
 		wiki.gsub!(/\*\*((?!\s)[^\*]+?)\*\*(?=[^\*|$]{1})/, '*\1*')
+
 		# convert block code
 		wiki.gsub!(/(~|`){3}([a-z]+)/, '<pre><code class="\2">')
 		wiki.gsub!(/(~|`){3}/, '</code></pre>')
+
+		# convert unsorted list
+		wiki.gsub!(/(- |\* )([a-z]+)/, '* \2')
+
+
 		# wiki.gsub!(/|(~~~\|```)/, '</pre></code>')
 		# convert inline code
 		wiki.gsub!(/\`((?!\s)[^\`]+?)\`/, '@\1@')
@@ -29,7 +37,6 @@ class String
 			tag = "h#{$1.length}."
 			wiki.gsub!(/(#+)/, tag)
 		end
-
 
 		return wiki
 	end
