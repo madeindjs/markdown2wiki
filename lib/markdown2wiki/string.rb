@@ -21,8 +21,10 @@ class String
 		wiki.gsub!(/(~|`){3}/, '</code></pre>')
 
 		# convert unsorted list
-		wiki.gsub!(/(- |\* )([a-z]+)/, '* \2')
+		wiki.gsub!(/(-|\*) (.*\n)/, '* \2')
 
+		# convert sorted list
+		wiki.gsub!(/[1-9]+\. (.*\n)/, '# \1')
 
 		# wiki.gsub!(/|(~~~\|```)/, '</pre></code>')
 		# convert inline code

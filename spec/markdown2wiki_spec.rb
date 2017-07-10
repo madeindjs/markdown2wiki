@@ -77,16 +77,17 @@ eos
 
   it "convert sorted list" do
     markdown = <<-eos
+1. pommes
+2. pêches
+3. poires
+eos
+
+    wiki = <<-eos
 # pommes
 # pêches
 # poires
 eos
 
-    wiki = <<-eos
-1. pommes
-2. pêches
-3. poires
-eos
     expect(markdown.markdown_to_wiki).to eq(wiki)
   end
 
