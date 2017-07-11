@@ -6,11 +6,11 @@ RSpec.describe Markdown2wiki do
   end
 
   it "convert strong tag" do
-    expect("Alex **is** awesome".markdown_to_wiki).to eq("Alex *is* awesome")
+    expect("**Alex** is **awesome**".markdown_to_wiki).to eq("*Alex* is *awesome*")
   end
 
   it "convert italic tag" do
-    expect("Alex *is* awesome".markdown_to_wiki).to eq("Alex _is_ awesome")
+    expect("*Alex* is *awesome*".markdown_to_wiki).to eq("_Alex_ is _awesome_")
   end
 
   it "convert heading tag" do
