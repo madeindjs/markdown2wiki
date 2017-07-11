@@ -5,13 +5,16 @@ class String
 
 	# Wikiに変換する
 	def markdown_to_wiki
-		wiki = self
+		# add space around string to match markdown tag
+		wiki = " #{self} "
+
+		not_splat = '[^\*]'
 
 		# convert italic!
-		wiki.gsub!(/[^\*]\*(\w+)\*(\s|\.)/, ' _\1_\2')
+		wiki.gsub!(/(#{not_splat})\*(#{not_splat}+)\*(#{not_splat})/, '\1_\2_\3')
 
 		# convert strong!
-		wiki.gsub!(/(\s|\.)\*\*(.+)\*\*(\s|\.)/, '\1*\2*\3')
+		wiki.gsub!(/(#{not_splat})\*\*(#{not_splat}+)\*\*(#{not_splat})/, '\1*\2*\3')
 
 		# convert link!
 		wiki.gsub!(/\[(.*)\]\((.*)\)/, '"\1":\2')
@@ -40,7 +43,8 @@ class String
 			wiki.gsub!(/(#+)/, tag)
 		end
 
-		return wiki
+		# delete spaces added first and return string 
+		return wiki[1..-2]
 	end
 
 end
