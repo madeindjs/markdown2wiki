@@ -17,7 +17,8 @@ class String
 		wiki.gsub!(/(#{not_splat})\*\*(#{not_splat}+)\*\*(#{not_splat})/, '\1*\2*\3')
 
 		# convert link!
-		wiki.gsub!(/\[(.*)\]\((.*)\)/, '"\1":\2')
+		regex_url = /(https?:\/\/[\S]+)/
+		wiki.gsub!(/\[(.*)\]\(#{regex_url}\)/, '"\1":\2')
 
 		# convert block code
 		wiki.gsub!(/(~|`){3}([a-z]+)/, '<pre><code class="\2">')
