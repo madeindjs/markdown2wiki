@@ -20,6 +20,9 @@ class String
 		regex_url = /(https?:\/\/[\S]+)/
 		wiki.gsub!(/\[(.*)\]\(#{regex_url}\)/, '"\1":\2')
 
+		# delete spaces added first and return string
+		wiki = wiki[1..-2]
+
 		# convert block code
 		wiki.gsub!(/(~|`){3}([a-z]+)/, '<pre><code class="\2">')
 		wiki.gsub!(/(~|`){3}/, '</code></pre>')
@@ -44,8 +47,11 @@ class String
 			wiki.gsub!(/(#+)/, tag)
 		end
 
-		# delete spaces added first and return string 
-		return wiki[1..-2]
+		wiki.gsub!(/(.*)\n={3,}/, 'h1. \1')
+		wiki.gsub!(/(.*)\n-{3,}/, 'h2. \1')
+
+		# delete spaces added first and return string
+		return wiki
 	end
 
 end

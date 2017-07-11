@@ -18,6 +18,25 @@ RSpec.describe Markdown2wiki do
     expect("## Alex is awesome\n\n".markdown_to_wiki).to eq("h2. Alex is awesome\n\n")
   end
 
+  it "convert alternative heading tag" do
+    markdown = <<-eos
+Hello
+=====
+
+How are you?
+------------
+
+eos
+
+    wiki = <<-eos
+h1. Hello
+
+h2. How are you?
+
+eos
+    expect(markdown.markdown_to_wiki).to eq(wiki)
+  end
+
   it "convert inline code" do
     expect("Alex is `awesome`".markdown_to_wiki).to eq("Alex is @awesome@")
   end
