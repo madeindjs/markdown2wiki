@@ -5,15 +5,34 @@ class String
 
 	# Wikiに変換する
 	def markdown_to_wiki
-		wiki = self
+		# add space around string to match markdown tag
+		wiki = " #{self} "
+
+		not_splat = '[^\*]'
 
 		# convert italic!
-		wiki.gsub!(/\*((?!\s)[^\*]+?)\*(?=[^\*|$]{1})/, '_\1_')
+		wiki.gsub!(/(#{not_splat})\*(#{not_splat}+)\*(#{not_splat})/, '\1_\2_\3')
+
 		# convert strong!
-		wiki.gsub!(/\*\*((?!\s)[^\*]+?)\*\*(?=[^\*|$]{1})/, '*\1*')
+		wiki.gsub!(/(#{not_splat})\*\*(#{not_splat}+)\*\*(#{not_splat})/, '\1*\2*\3')
+
+		# convert link!
+		regex_url = /(https?:\/\/[\S]+)/
+		wiki.gsub!(/\[(.*)\]\(#{regex_url}\)/, '"\1":\2')
+
+		# delete spaces added first and return string
+		wiki = wiki[1..-2]
+
 		# convert block code
 		wiki.gsub!(/(~|`){3}([a-z]+)/, '<pre><code class="\2">')
 		wiki.gsub!(/(~|`){3}/, '</code></pre>')
+
+		# convert unsorted list
+		wiki.gsub!(/(-|\*) (.*\n)/, '* \2')
+
+		# convert sorted list
+		wiki.gsub!(/[1-9]+\. (.*\n)/, '# \1')
+
 		# wiki.gsub!(/|(~~~\|```)/, '</pre></code>')
 		# convert inline code
 		wiki.gsub!(/\`((?!\s)[^\`]+?)\`/, '@\1@')
@@ -22,78 +41,17 @@ class String
 		wiki.gsub!(/~(.+?)~/, '-\1-')
 
 		# convert heading!
-		/(#+)/ =~ wiki
+		/(#+).*\n\n/ =~ wiki
 		unless $1.nil?
 			tag = "h#{$1.length}."
 			wiki.gsub!(/(#+)/, tag)
 		end
 
+		wiki.gsub!(/(.*)\n={3,}/, 'h1. \1')
+		wiki.gsub!(/(.*)\n-{3,}/, 'h2. \1')
 
+		# delete spaces added first and return string
 		return wiki
 	end
 
-	# private
-
-	# 	wiki = self
-
-
-	# 	return self
-	# end
-
-	# 	# convert unordered_list!(space = nil)
-	# 	space ||= '\t'
-
-	# 	pattern = /^(#{space}*\*)/
-	# 	pattern =~ self
-
-	# 	if $1.nil?
-	# 		return self
-	# 	end
-
-	# 	symbol = '*'
-	# 	$1.scan(/\t/).size.to_i.times do
-	# 		symbol += '*'
-	# 	end
-
-	# 	self.gsub!(pattern, symbol)
-	# 	return self
-	# end
-
-	# 	# convert ordered_list!(space = nil)
-	# 	space ||= '\t'
-
-	# 	pattern = /^(#{space}*[0-9]+?\.)/
-	# 	pattern =~ self
-
-	# 	if $1.nil?
-	# 		return self
-	# 	end
-
-	# 	symbol = '#'
-	# 	$1.scan(/\t/).size.to_i.times do
-	# 		symbol += '#'
-	# 	end
-
-	# 	self.gsub!(pattern, symbol)
-	# 	return self
-	# end
-
-	# 	# convert link!
-	# 	/\[(.+?)\]\((.+?)( "(.+)")?\)/ =~ self
-
-	# 	if $1.nil?
-	# 		return self
-	# 	end
-	
-	# 	title = ''
-
-	# 	if !$4.nil?
-	# 		title = '(' + $4 + ')'
-	# 	end
-	
-	# 	link = '"' + $1 + title + '":' + $2
-	
-	# 	self.gsub!(/\[(.+?)\]\((.+?)( "(.+)")?\)/, link)
-	# 	return self
-	# end
 end
