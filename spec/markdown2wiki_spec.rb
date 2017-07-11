@@ -124,5 +124,120 @@ eos
     expect(markdown.markdown_to_wiki).to eq(expected_result)
   end
 
+  it "not convert in code tag" do
+    markdown = <<-eos
+
+```ruby
+require "markdown2wiki"
+
+markdown = "Hello, [Markdown2Wiki](https://github.com/madeindjs/markdown2wiki) is ~good~ **anwesome** *(and it's written in `Ruby`)*."
+puts markdown.markdown_to_wiki
+# => Hello, "Markdown2Wiki":https://github.com/madeindjs/markdown2wiki is -good- *anwesome* _(and it's written in @Ruby@)_.
+```
+eos
+
+    wiki = <<-eos
+<pre><code class="ruby">
+require "markdown2wiki"
+
+markdown = "Hello, [Markdown2Wiki](https://github.com/madeindjs/markdown2wiki) is ~good~ **anwesome** *(and it's written in `Ruby`)*."
+puts markdown.markdown_to_wiki
+# => Hello, "Markdown2Wiki":https://github.com/madeindjs/markdown2wiki is -good- *anwesome* _(and it's written in @Ruby@)_.
+</code></pre>
+eos
+    expect(markdown.markdown_to_wiki).to eq(wiki)
+  end
+
+  it "convert big markdown tag" do
+    markdown = <<-eos
+Markdown2Wiki
+=============
+
+A simple Monkey patch of `String` to convert **Markdown** to **Wiki**.
+
+
+Instalation
+-----------
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'recipe_crawler'
+```
+
+And then execute:
+
+```bash
+$ bundle
+```
+
+Or install it yourself as:
+
+```bash
+$ gem install recipe_crawler
+```
+
+
+Usage
+-----
+
+```ruby
+require "markdown2wiki"
+
+markdown = "Hello, [Markdown2Wiki](https://github.com/madeindjs/markdown2wiki) is ~good~ **anwesome** *(and it's written in `Ruby`)*."
+puts markdown.markdown_to_wiki
+# => Hello, "Markdown2Wiki":https://github.com/madeindjs/markdown2wiki is -good- *anwesome* _(and it's written in @Ruby@)_.
+```
+
+TODO
+----
+
+- Add command line tool
+eos
+
+    wiki = <<-eos
+h1. Markdown2Wiki
+
+A simple Monkey patch of @String@ to convert *Markdown* to *Wiki*.
+
+
+h2. Instalation
+
+Add this line to your application's Gemfile:
+
+<pre><code class="ruby">
+gem 'recipe_crawler'
+</code></pre>
+
+And then execute:
+
+<pre><code class="bash">
+$ bundle
+</code></pre>
+
+Or install it yourself as:
+
+<pre><code class="bash">
+$ gem install recipe_crawler
+</code></pre>
+
+
+h2. Usage
+
+<pre><code class="ruby">
+require "markdown2wiki"
+
+markdown = "Hello, [Markdown2Wiki](https://github.com/madeindjs/markdown2wiki) is ~good~ **anwesome** *(and it's written in `Ruby`)*."
+puts markdown.markdown_to_wiki
+# => Hello, "Markdown2Wiki":https://github.com/madeindjs/markdown2wiki is -good- *anwesome* _(and it's written in @Ruby@)_.
+</code></pre>
+
+h2. TODO
+
+* Add command line tool
+eos
+    expect(markdown.markdown_to_wiki).to eq(wiki)
+  end
+
 
 end
