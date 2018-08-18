@@ -1,6 +1,8 @@
 Markdown2Wiki
 =============
 
+[![Gem Version](https://badge.fury.io/rb/markdown2wiki.svg)](https://rubygems.org/gems/markdown2wiki)
+
 A simple Monkey patch of `String` to convert **Markdown** to **Wiki**.
 
 
@@ -10,7 +12,7 @@ Instalation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'recipe_crawler'
+gem 'markdown2wiki'
 ```
 
 And then execute:
@@ -22,7 +24,7 @@ $ bundle
 Or install it yourself as:
 
 ```bash
-$ gem install recipe_crawler
+$ gem install markdown2wiki
 ```
 
 
